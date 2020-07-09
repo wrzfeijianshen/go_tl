@@ -81,3 +81,70 @@ func T_2() {
 	fmt.Printf("%q\n", reg.FindAllString(text, -1))
 	// ["-" "-" "A"]
 }
+
+// T_3 :
+func T_3() {
+	// 字符组 简记法
+	fmt.Println("字符组 简记法...")
+	text := "7f-9l2kd4	 -_e6fA中"
+	reg := regexp.MustCompile(`[\d]`)
+
+	fmt.Printf("%q\n", reg.FindAllString(text, -1))
+	// ["7" "9" "2" "4" "6"]
+
+	// \d 等价于 [0-9] 数字 digit
+	reg = regexp.MustCompile(`\d`)
+	fmt.Printf("%q\n", reg.FindAllString(text, -1))
+	// ["7" "9" "2" "4" "6"]
+
+	// \w 代表单词 word 等价于 [0-9a-zA-Z_]
+	reg = regexp.MustCompile(`\w`)
+	fmt.Printf("%q\n", reg.FindAllString(text, -1))
+	// ["7" "f" "9" "l" "2" "k" "d" "4" "_" "e" "6" "f" "A"]
+
+	reg = regexp.MustCompile(`[0-9a-zA-Z_]`)
+	fmt.Printf("%q\n", reg.FindAllString(text, -1))
+
+	// \s 代表空白字符 space 等价于[ \t\r\n\v\f],第一个是空格
+	reg = regexp.MustCompile(`\s`)
+	fmt.Printf("%q\n", reg.FindAllString(text, -1))
+	// ["\t" " "]
+
+	// 字符组简记法可以单独出现,如上,也可以在字符组中出现,如第一个示例
+	// [0-9a-zA-z]可以写为[\da-zA-z] 这样是不是就更为容易了
+
+	// 互补的字符 \D \W \S
+	// \S能匹配的字符是^\s ,不是匹配\s的字符就是\S,两者相反,合起来便是所有字符
+}
+
+// T_4 :
+func T_4() {
+	// posix字符组
+	// 在某些文档中出现 [:digit:] 数字 [:lower:] 小写
+	// 这就是posix字符组,在linux某些工具中sed awk grep 使用.
+	// 之前的字符组属于perl衍生处理的正则表达式流派 flavor,叫做 PCRE
+
+	// POSIX ,之前的[a-z] 准确名称叫做 posix方括号表达式, 用法基本一致,转义除外,这里暂不介绍
+	// pcre 可以跳出[] posix 必须写在[]里面 : [[:xxx:]]
+	fmt.Println("字符组 运算...")
+	text := "7f-9l2kd4-_e6fA中"
+	reg := regexp.MustCompile(`[[:xdigit:]]`)
+
+	fmt.Printf("%q\n", reg.FindAllString(text, -1))
+
+	// posix		说明				ascII字符组		等价的pcre简记法
+	// [:alnum:] 字母和数字			[a-zA-Z0-9]
+	// [:alpha:] 	字母				[a-zA-Z]
+	// [:ASCII::]	ASCII字符			[\x00-\x7F]
+	// [:blank:]	空格和制表符		[ \t]
+	// [:cntrl:]	控制字符			[\x-\x1F\x7F]
+	// [:digit:]	数字				[0-9]			\d
+	// [:graph:]	空白字符之外的字符	[x21-\x7E]
+	// [:lower:]	小写字母			[a-z]
+	// [:print:]	打印字符			[\x20-\x7E]
+	// [:punct:]	标点符号
+	// [:space:]    空白字符 			[ \t\r\n\v\f]  \s
+	// [:upper:]    大写				[A-Z]
+	// [:word:]		字母 				[A-Za-z0-9_]  \w
+	// [:xdigit:]   十六进制			[A-Fa-f0-9]
+}
